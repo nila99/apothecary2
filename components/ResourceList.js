@@ -13,86 +13,61 @@ import { Redirect } from '@shopify/app-bridge/actions';
 import { Context } from '@shopify/app-bridge-react';
 
 
-const GET_PRODUCTS_BY_ID = gql`
-  query getProducts($ids: [ID!]!) {
-    nodes(ids: $ids) {
-      ... on Product {
-        title
-        handle
-        descriptionHtml
+const GET_CUSTOMERS = gql`
+  query {
+  customers(first:250,){
+    edges{
+      node{
         id
-        images(first: 1) {
-          edges {
-            node {
-              originalSrc
-              altText
-            }
-          }
-        }
-        variants(first: 1) {
-          edges {
-            node {
-              price
-              id
-            }
-          }
-        }
+        firstName
+        lastName
       }
     }
   }
+}
 `;
 
 
-class ResourceListWithProducts extends React.Component {
+class ResourceListWithCustomers extends React.Component {
+  static contextType = Context;
+
   render() {
-    const twoWeeksFromNow = new Date(Date.now() + 12096e5).toDateString();
+    const app = this.context;
+    const redirectToProduct = () => {
+      const redirect = Redirect.create(app);
+      redirect.dispatch(
+        Redirect.Action.APP,
+        '/customer-metafields',
+      );
+    };
+
     return (
-      <Query query={GET_PRODUCTS_BY_ID} variables={{ ids: store.get('ids') }}>
-        {({ data, loading, error }) => {
-          if (loading) return <div>Loading…</div>;
-          if (error) return <div>{error.message}</div>;
-          console.log(data);
-          return (
-            <Card>
+                  <Card>
               <ResourceList
                 showHeader
-                resourceName={{ singular: 'Product', plural: 'Products' }}
-                items={data.nodes}
-                renderItem={item => {
-                  const media = (
-                    <Thumbnail
-                      source={
-                        item.images.edges[0]
-                          ? item.images.edges[0].node.originalSrc
-                          : ''
-                      }
-                      alt={
-                        item.images.edges[0]
-                          ? item.images.edges[0].node.altText
-                          : ''
-                      }
-                    />
-                  );
-                  const price = item.variants.edges[0].node.price;
+                resourceName={{ singular: 'Customer', plural: 'Customers' }}
+                items={data.customers.edges}
+                renderItem={(item) => {
+                  const {id, firstName, lastName} = item;
+
                   return (
                     <ResourceList.Item
-                      id={item.id}
-                      media={media}
-                      accessibilityLabel={`View details for ${item.title}`}
+                      id={item.node.id}
+                      accessibilityLabel={`View metafields for ${item.node.firstName} ${item.node.lastName}`}
+                      onClick={() => {
+                        store.set('item', item);
+                        store.set('id', item.node.id);
+                        console.log('item.node.id: ', item.node.id);
+                        redirectToProduct();
+                      }}
                     >
                       <Stack>
                         <Stack.Item fill>
                           <h3>
                             <TextStyle variation="strong">
-                              {item.title}
+                              {item.node.firstName} {item.node.lastName}
                             </TextStyle>
                           </h3>
-                        </Stack.Item>
-                        <Stack.Item>
-                          <p>${price}</p>
-                        </Stack.Item>
-                        <Stack.Item>
-                          <p>Expires on {twoWeeksFromNow} </p>
                         </Stack.Item>
                       </Stack>
                     </ResourceList.Item>
@@ -103,8 +78,9 @@ class ResourceListWithProducts extends React.Component {
           );
         }}
       </Query>
+      </Page>
     );
   }
 }
 
- export default ResourceListWithProducts;
+export default ResourceListWithCustomers;

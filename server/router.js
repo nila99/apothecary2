@@ -46,14 +46,14 @@ async function postData(ctx, next){
       }
       `;
 
-    const Url = `admin/api/2019-07/graphql.json`;
+    const Url = `admin/api/2020-04/graphql.json`;
     const options = {
       credentials: 'include',
       headers: {
         //'X-Shopify-Access-Token': sourceFile.exportToken,
         // actually better to hardcode token so dont have to re-install 
         // every time i push an update
-        'X-Shopify-Access-Token': "16d763729640742c7ec12ea99b7db4a7",
+        'X-Shopify-Access-Token': "6e0118e7fdc106c9f8098c611571f223",
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({query: UPDATE_CUSTOMER })

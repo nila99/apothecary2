@@ -42,7 +42,15 @@ class ResourceListWithCustomers extends React.Component {
     };
 
     return (
-                  <Card>
+      <Page>
+      <Query query={GET_CUSTOMERS}>
+        {({ data, loading, error }) => {
+          if (loading) { return <div>Loading…</div>; }
+          if (error) { return <div>{error.message}</div>; }
+          console.log("data", data);
+
+          return (
+            <Card>
               <ResourceList
                 showHeader
                 resourceName={{ singular: 'Customer', plural: 'Customers' }}

@@ -1,4 +1,14 @@
-require("dotenv").config();
+const dotenv = require('dotenv');
+dotenv.config();
+
+const {
+  SHOPIFY_API_SECRET_KEY,
+  SHOPIFY_API_KEY,
+  TUNNEL_URL,
+  API_VERSION,
+  SHOP_NAME
+} = process.env;
+
 const withCSS = require('@zeit/next-css');
 const webpack = require('webpack');
 

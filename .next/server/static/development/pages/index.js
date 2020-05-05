@@ -119,87 +119,90 @@ __webpack_require__.r(__webpack_exports__);
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
 
-const GET_PRODUCTS_BY_ID = graphql_tag__WEBPACK_IMPORTED_MODULE_1___default.a`
-  query getProducts($ids: [ID!]!) {
-    nodes(ids: $ids) {
-      ... on Product {
-        title
-        handle
-        descriptionHtml
+
+
+const GET_CUSTOMERS = graphql_tag__WEBPACK_IMPORTED_MODULE_1___default.a`
+  query {
+  customers(first:250,){
+    edges{
+      node{
         id
-        images(first: 1) {
-          edges {
-            node {
-              originalSrc
-              altText
-            }
-          }
-        }
-        variants(first: 1) {
-          edges {
-            node {
-              price
-              id
-            }
-          }
-        }
+        firstName
+        lastName
       }
     }
   }
+}
 `;
 
-class ResourceListWithProducts extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+class ResourceListWithCustomers extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   render() {
-    const twoWeeksFromNow = new Date(Date.now() + 12096e5).toDateString();
-    return __jsx(react_apollo__WEBPACK_IMPORTED_MODULE_2__["Query"], {
-      query: GET_PRODUCTS_BY_ID,
-      variables: {
-        ids: store_js__WEBPACK_IMPORTED_MODULE_4___default.a.get('ids')
-      }
+    const app = this.context;
+
+    const redirectToProduct = () => {
+      const redirect = _shopify_app_bridge_actions__WEBPACK_IMPORTED_MODULE_5__["Redirect"].create(app);
+      redirect.dispatch(_shopify_app_bridge_actions__WEBPACK_IMPORTED_MODULE_5__["Redirect"].Action.APP, '/customer-metafields');
+    };
+
+    return __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["Page"], null, __jsx(react_apollo__WEBPACK_IMPORTED_MODULE_2__["Query"], {
+      query: GET_CUSTOMERS
     }, ({
       data,
       loading,
       error
     }) => {
-      if (loading) return __jsx("div", null, "Loading\u2026");
-      if (error) return __jsx("div", null, error.message);
-      console.log(data);
+      if (loading) {
+        return __jsx("div", null, "Loading\u2026");
+      }
+
+      if (error) {
+        return __jsx("div", null, error.message);
+      }
+
+      console.log("data", data);
       return __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["Card"], null, __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["ResourceList"], {
         showHeader: true,
         resourceName: {
-          singular: 'Product',
-          plural: 'Products'
+          singular: 'Customer',
+          plural: 'Customers'
         },
-        items: data.nodes,
+        items: data.customers.edges,
         renderItem: item => {
-          const media = __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["Thumbnail"], {
-            source: item.images.edges[0] ? item.images.edges[0].node.originalSrc : '',
-            alt: item.images.edges[0] ? item.images.edges[0].node.altText : ''
-          });
-
-          const price = item.variants.edges[0].node.price;
+          const {
+            id,
+            firstName,
+            lastName
+          } = item;
           return __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["ResourceList"].Item, {
-            id: item.id,
-            media: media,
-            accessibilityLabel: `View details for ${item.title}`
+            id: item.node.id,
+            accessibilityLabel: `View metafields for ${item.node.firstName} ${item.node.lastName}`,
+            onClick: () => {
+              store_js__WEBPACK_IMPORTED_MODULE_4___default.a.set('item', item);
+              store_js__WEBPACK_IMPORTED_MODULE_4___default.a.set('id', item.node.id);
+              console.log('item.node.id: ', item.node.id);
+              redirectToProduct();
+            }
           }, __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["Stack"], null, __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["Stack"].Item, {
             fill: true
           }, __jsx("h3", null, __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["TextStyle"], {
             variation: "strong"
-          }, item.title))), __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["Stack"].Item, null, __jsx("p", null, "$", price)), __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["Stack"].Item, null, __jsx("p", null, "Expires on ", twoWeeksFromNow, " "))));
+          }, item.node.firstName, " ", item.node.lastName)))));
         }
       }));
-    });
+    }));
   }
 
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (ResourceListWithProducts);
+_defineProperty(ResourceListWithCustomers, "contextType", _shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_6__["Context"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (ResourceListWithCustomers);
 
 /***/ }),
 
@@ -224,58 +227,14 @@ __webpack_require__.r(__webpack_exports__);
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
 
 
 
 const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 
 class Index extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
-  constructor(...args) {
-    super(...args);
-
-    _defineProperty(this, "state", {
-      open: false
-    });
-
-    _defineProperty(this, "handleSelection", resources => {
-      const idsFromResources = resources.selection.map(product => product.id);
-      this.setState({
-        open: false
-      });
-      store_js__WEBPACK_IMPORTED_MODULE_3___default.a.set('ids', idsFromResources);
-    });
-  }
-
   render() {
-    const emptyState = !store_js__WEBPACK_IMPORTED_MODULE_3___default.a.get('ids');
-    return __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_1__["Page"], null, __jsx(_shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_2__["TitleBar"], {
-      primaryAction: {
-        content: 'Select products',
-        onAction: () => this.setState({
-          open: true
-        })
-      }
-    }), __jsx(_shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_2__["ResourcePicker"], {
-      resourceType: "Product",
-      showVariants: false,
-      open: this.state.open,
-      onSelection: resources => this.handleSelection(resources),
-      onCancel: () => this.setState({
-        open: false
-      })
-    }), emptyState ? __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_1__["Layout"], null, __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_1__["EmptyState"], {
-      heading: "Discount your products temporarily",
-      action: {
-        content: 'Select products',
-        onAction: () => this.setState({
-          open: true
-        })
-      },
-      image: img
-    }, __jsx("p", null, "Select products to change their price temporarily."))) : __jsx(_components_ResourceList__WEBPACK_IMPORTED_MODULE_4__["default"], null));
+    return __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_1__["Page"], null, __jsx(_components_ResourceList__WEBPACK_IMPORTED_MODULE_4__["default"], null));
   }
 
 }

@@ -121,7 +121,7 @@ var ResourceListWithCustomers = /*#__PURE__*/function (_React$Component) {
               fill: true
             }, __jsx("h3", null, __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_10__["TextStyle"], {
               variation: "strong"
-            }, item.node.firstName, " ", item.node.lastName)))));
+            }, item.node.id, " ", item.node.firstName, " ", item.node.lastName)))));
           }
         }));
       }));
@@ -75770,7 +75770,7 @@ var Index = /*#__PURE__*/function (_React$Component) {
 
 /***/ }),
 
-/***/ 3:
+/***/ 2:
 /*!***************************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2F&absolutePagePath=%2FUsers%2Fvaannilaannadurai%2FDesktop%2Fapothecaryv2%2Fpages%2Findex.js&hotRouterUpdates=true ***!
   \***************************************************************************************************************************************************************/
@@ -75793,5 +75793,5 @@ module.exports = dll_2adc2403d89adc16ead0;
 
 /***/ })
 
-},[[3,"static/runtime/webpack.js"]]]);
+},[[2,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=index.js.map

@@ -192,7 +192,7 @@ class ResourceListWithCustomers extends react__WEBPACK_IMPORTED_MODULE_0___defau
             fill: true
           }, __jsx("h3", null, __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["TextStyle"], {
             variation: "strong"
-          }, item.node.firstName, " ", item.node.lastName)))));
+          }, item.node.id, " ", item.node.firstName, " ", item.node.lastName)))));
         }
       }));
     }));

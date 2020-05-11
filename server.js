@@ -52,12 +52,12 @@ app.prepare().then(() => {
     ctx.res.statusCode = 200;
     return
   });
-
   server.use(router.allowedMethods());
   server.use(router.routes());
   
   router.use(bodyParser());
   router.post('/formSubmit', postData);
+
 
   server.listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);

@@ -73,7 +73,7 @@ class ResourceListWithCustomers extends React.Component {
                         <Stack.Item fill>
                           <h3>
                             <TextStyle variation="strong">
-                              {item.node.firstName} {item.node.lastName}
+                              {item.node.id} {item.node.firstName} {item.node.lastName}
                             </TextStyle>
                           </h3>
                         </Stack.Item>

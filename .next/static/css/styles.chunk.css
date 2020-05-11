@@ -10698,5 +10698,12 @@ body{
   opacity:0.8;
   text-align:center; }
 
+h1{
+    margin-bottom: 16px;
+}
+
+p{
+    margin-bottom: 8px;
+}
 
 /*# sourceMappingURL=styles.chunk.css.map*/

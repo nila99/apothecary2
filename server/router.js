@@ -13,6 +13,16 @@ async function postData(ctx, next){
 
     userId = ctx.body.userId;
     Age = ctx.body.Age;
+    skintype = ctx.body.skintype;
+    conditions = ctx.body.conditions;
+    conditions_other = ctx.body.conditions_other;
+    pimples = ctx.body.pimples;
+    goals = ctx.body.goals;
+    routine = ctx.body.routine;
+    product = ctx.body.product;
+    price = ctx.body.price;
+    preferences = ctx.body.preferences;
+    preferences_other = ctx.body.preferences_other;
 
     const UPDATE_CUSTOMER = `
       mutation {
@@ -21,7 +31,38 @@ async function postData(ctx, next){
         metafields: 
           [{
             namespace: "global", key: "Age", value:"`+ Age +`", valueType: STRING
-          }]
+          },
+          {
+            namespace: "global", key: "skintype", value:"`+ skintype +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "conditions", value:"`+ conditions +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "conditions_other", value:"`+ conditions_other +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "pimples", value:"`+ pimples +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "goals", value:"`+ goals +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "routine", value:"`+ routine +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "product", value:"`+ product +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "price", value:"`+ price +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "preferences", value:"`+ preferences +`", valueType: STRING
+          },
+          {
+            namespace: "global", key: "preferences_other", value:"`+ preferences_other +`", valueType: STRING
+          }
+          ]
         }) 
         {
           customer {
@@ -53,7 +94,7 @@ async function postData(ctx, next){
         //'X-Shopify-Access-Token': sourceFile.exportToken,
         // actually better to hardcode token so dont have to re-install 
         // every time i push an update
-        'X-Shopify-Access-Token': "6e0118e7fdc106c9f8098c611571f223",
+        'X-Shopify-Access-Token': sourceFile.exportToken,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({query: UPDATE_CUSTOMER })
@@ -61,7 +102,7 @@ async function postData(ctx, next){
     console.log('The options are', options);
     const optionsWithPost = { ...options, method: 'POST' };
     fetch(
-      `https://${process.env.SHOP_NAME}.myshopify.com/${Url}`,
+      `https://apothecarytest.myshopify.com/admin/api/2020-04/graphql.json`,
       optionsWithPost
     )
       .then(response => response.json())
